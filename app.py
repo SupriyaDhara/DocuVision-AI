@@ -1,17 +1,36 @@
+from flask import Flask, render_template, request, send_file
+from werkzeug.utils import secure_filename
 from reportlab.platypus import SimpleDocTemplate, Paragraph
 from reportlab.lib.styles import getSampleStyleSheet
-from flask import Flask, render_template, request, send_file
+
 import os
 import time
 import csv
-from werkzeug.utils import secure_filename
+
+from download_model import download_model
+
+
+download_model()
+
 from src.predict import predict_full_document
 from src.summarizer import generate_summary
 
-def generate_pdf(filename, summary, prediction, processing_time):
-    pdf_path = os.path.join("outputs", "ocr_report.pdf")
 
-    doc = SimpleDocTemplate(pdf_path)
+app = Flask(__name__)
+
+UPLOAD_FOLDER = os.path.join("static", "uploads")
+OUTPUT_FOLDER = "outputs"
+HISTORY_FILE = os.path.join(OUTPUT_FOLDER, "ocr_history.csv")
+PDF_FILE = os.path.join(OUTPUT_FOLDER, "ocr_report.pdf")
+
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+os.makedirs(OUTPUT_FOLDER, exist_ok=True)
+
+
+def generate_pdf(filename, summary, prediction, processing_time):
+    doc = SimpleDocTemplate(PDF_FILE)
     styles = getSampleStyleSheet()
 
     elements = []
@@ -28,23 +47,13 @@ def generate_pdf(filename, summary, prediction, processing_time):
     elements.append(Paragraph("<br/>", styles["Normal"]))
 
     elements.append(Paragraph("<b>Extracted Text</b>", styles["Heading2"]))
-    elements.append(Paragraph(prediction.replace("\n", "<br/>"), styles["BodyText"]))
+    safe_text = prediction.replace("\n", "<br/>") if prediction else "No extracted text"
+    elements.append(Paragraph(safe_text, styles["BodyText"]))
 
     doc.build(elements)
 
-    return pdf_path
+    return PDF_FILE
 
-
-app = Flask(__name__)
-
-UPLOAD_FOLDER = os.path.join("static", "uploads")
-OUTPUT_FOLDER = "outputs"
-HISTORY_FILE = os.path.join(OUTPUT_FOLDER, "ocr_history.csv")
-
-app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
-
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
 @app.route("/", methods=["GET", "POST"])
 def home():
@@ -77,14 +86,14 @@ def home():
 
             summary = generate_summary(prediction)
 
-            pdf_path = generate_pdf(
-    filename,
-    summary,
-    prediction,
-    processing_time
-)
-
             processing_time = round(time.time() - start, 2)
+
+            generate_pdf(
+                filename,
+                summary,
+                prediction,
+                processing_time
+            )
 
             file_exists = os.path.exists(HISTORY_FILE)
 
@@ -117,9 +126,9 @@ def home():
         processing_time=processing_time
     )
 
+
 @app.route("/download_history")
 def download_history():
-
     if os.path.exists(HISTORY_FILE):
         return send_file(
             HISTORY_FILE,
@@ -128,19 +137,20 @@ def download_history():
         )
 
     return "No OCR history available."
+
+
 @app.route("/download_pdf")
 def download_pdf():
-
-    pdf_path = os.path.join("outputs", "ocr_report.pdf")
-
-    if os.path.exists(pdf_path):
+    if os.path.exists(PDF_FILE):
         return send_file(
-            pdf_path,
+            PDF_FILE,
             as_attachment=True,
             download_name="ocr_report.pdf"
         )
 
     return "No PDF available."
 
+
 if __name__ == "__main__":
-    app.run(debug=True, use_reloader=False)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=False)

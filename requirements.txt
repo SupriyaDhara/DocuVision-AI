@@ -1,22 +1,41 @@
-# Core
-python-dotenv==1.0.1          # if you use .env, optional
+# Web Framework
+Flask==3.0.3
+Werkzeug==3.0.3
+
+# Environment Variables
+python-dotenv==1.0.1
+
+# Deep Learning
+torch==2.5.1
+torchvision==0.20.1
+
+# Data Processing
 numpy==1.26.4
 pandas==2.2.2
 
-# Image processing / CV
-opencv-python==4.10.0.84
+# Computer Vision
+opencv-python-headless==4.10.0.84
 Pillow==10.4.0
 
-# OCR
-pytesseract==0.3.13           # Python wrapper; requires Tesseract installed on system
+# OCR Utilities
+pytesseract==0.3.13
 
-# Evaluation / utilities
-scikit-learn==1.5.2           # for metrics if needed
-python-Levenshtein==0.25.1    # faster edit-distance, optional
+# AI Summary
+google-generativeai==0.8.5
 
-# Jupyter / notebooks (for eda.ipynb)
-jupyterlab==4.2.5             # or notebook==7.2.2
+# PDF Generation
+reportlab==4.2.2
 
-# Plotting for EDA
+# HTTP Requests (for downloading model)
+requests==2.32.3
+
+# Evaluation / Utilities
+scikit-learn==1.5.2
+python-Levenshtein==0.25.1
+
+# Plotting
 matplotlib==3.9.2
 seaborn==0.13.2
+
+# Jupyter (Optional - only if you use notebooks)
+jupyterlab==4.2.5
