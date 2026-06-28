@@ -6,8 +6,7 @@ Werkzeug==3.0.3
 python-dotenv==1.0.1
 
 # Deep Learning
-torch==2.5.1
-torchvision==0.20.1
+torch==2.12.1
 
 # Data Processing
 numpy==1.26.4
@@ -17,25 +16,15 @@ pandas==2.2.2
 opencv-python-headless==4.10.0.84
 Pillow==10.4.0
 
-# OCR Utilities
-pytesseract==0.3.13
-
 # AI Summary
 google-generativeai==0.8.5
 
 # PDF Generation
 reportlab==4.2.2
 
-# HTTP Requests (for downloading model)
+# HTTP Requests
 requests==2.32.3
 
 # Evaluation / Utilities
 scikit-learn==1.5.2
 python-Levenshtein==0.25.1
-
-# Plotting
-matplotlib==3.9.2
-seaborn==0.13.2
-
-# Jupyter (Optional - only if you use notebooks)
-jupyterlab==4.2.5
