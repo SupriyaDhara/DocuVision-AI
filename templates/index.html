@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DocuVision AI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            min-height: 100vh;
+            font-family: 'Segoe UI', sans-serif;
+            color: #ffffff;
+            background: linear-gradient(135deg, #020617, #0f172a, #1e293b, #1e3a8a, #0ea5e9);
+            background-size: 400% 400%;
+            animation: gradientMove 12s ease infinite;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .navbar-custom {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(96,165,250,0.25);
+        }
+
+        .nav-link {
+            color: white !important;
+            margin-left: 18px;
+        }
+
+        .nav-link:hover {
+            color: #38bdf8 !important;
+            text-shadow: 0 0 15px #38bdf8;
+        }
+
+        .hero {
+            text-align: center;
+            padding-top: 75px;
+            animation: fadeDown 1s ease;
+        }
+
+        .floating-icon {
+            font-size: 62px;
+            animation: floatIcon 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 18px #38bdf8);
+        }
+
+        .title {
+            font-size: 56px;
+            font-weight: 900;
+            text-shadow: 0 0 10px #38bdf8, 0 0 30px #0ea5e9;
+        }
+
+        .typing {
+            color: #dbeafe;
+            font-size: 18px;
+        }
+
+        .badge-ai {
+            background: rgba(14,165,233,0.18);
+            border: 1px solid rgba(96,165,250,0.35);
+            border-radius: 30px;
+            padding: 8px 18px;
+            display: inline-block;
+            color: #e0f2fe;
+        }
+
+        .img-fluid{
+    transition:0.3s;
+    border-radius:15px;
+}
+
+.img-fluid:hover{
+    transform:scale(1.04);
+    box-shadow:0 0 25px rgba(56,189,248,.5);
+}
+
+        .glass-card {
+            margin-top: 35px;
+            background: rgba(15, 23, 42, 0.62);
+            border-radius: 28px;
+            backdrop-filter: blur(18px);
+            box-shadow: 0 25px 55px rgba(0,0,0,0.45);
+            border: 1px solid rgba(96,165,250,0.25);
+            animation: fadeUp 1s ease;
+        }
+
+        .feature-card {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 20px;
+            padding: 22px;
+            text-align: center;
+            height: 100%;
+            transition: 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            background: rgba(59,130,246,0.16);
+            box-shadow: 0 0 28px rgba(56,189,248,0.28);
+        }
+
+        .feature-card h3 { font-size: 34px; }
+
+        .upload-box {
+            border: 2px dashed #60a5fa;
+            border-radius: 22px;
+            padding: 36px;
+            text-align: center;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .upload-box:hover {
+            border-color: #38bdf8;
+            box-shadow: 0 0 30px rgba(59,130,246,0.35);
+        }
+
+        .btn-custom {
+            background: linear-gradient(135deg, #2563eb, #0ea5e9);
+            color: white;
+            border: none;
+            padding: 13px 34px;
+            border-radius: 30px;
+            font-weight: 700;
+            box-shadow: 0 0 20px rgba(14,165,233,.45);
+        }
+
+        .btn-custom:hover {
+            background: linear-gradient(135deg, #3b82f6, #38bdf8);
+            color: white;
+            box-shadow: 0 0 35px rgba(56,189,248,.8);
+        }
+
+        .form-control {
+            border-radius: 15px;
+            padding: 13px;
+        }
+
+        .preview-wrapper {
+            position: relative;
+            overflow: hidden;
+            border-radius: 20px;
+            margin-top: 10px;
+        }
+
+        .preview-img {
+            max-width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.55);
+        }
+
+        .scan-line {
+            position: absolute;
+            top: -10%;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, transparent, #38bdf8, transparent);
+            box-shadow: 0 0 24px #38bdf8;
+            animation: scan 2.5s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { top: -10%; }
+            100% { top: 110%; }
+        }
+
+        .result-box {
+            background: #0f172a;
+            color: #e2e8f0;
+            border: 1px solid #334155;
+            border-radius: 20px;
+            padding: 25px;
+            min-height: 220px;
+            animation: slideIn 0.8s ease;
+        }
+
+        .result-text {
+            white-space: pre-wrap;
+            font-size: 18px;
+            line-height: 1.6;
+            background: #020617;
+            padding: 18px;
+            border-radius: 14px;
+            border-left: 4px solid #38bdf8;
+        }
+
+        .time-badge, .stat-badge {
+            background: rgba(59,130,246,.18);
+            color: #dbeafe;
+            border: 1px solid rgba(96,165,250,.35);
+            display: inline-block;
+            padding: 7px 14px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 700;
+            margin: 5px;
+        }
+
+        .download-btn {
+            margin-top: 15px;
+            border-radius: 25px;
+            padding: 10px 22px;
+        }
+
+        .section-title {
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 25px;
+            text-shadow: 0 0 15px #38bdf8;
+        }
+
+        .pipeline-step {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .pipeline-icon {
+            font-size: 42px;
+            margin-bottom: 10px;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(2, 6, 23, 0.88);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .loader-card {
+            background: rgba(15,23,42,0.8);
+            border: 1px solid rgba(96,165,250,0.35);
+            backdrop-filter: blur(16px);
+            border-radius: 24px;
+            padding: 40px;
+        }
+
+        .spinner {
+            width: 70px;
+            height: 70px;
+            border: 7px solid rgba(255,255,255,0.18);
+            border-top: 7px solid #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: auto;
+        }
+        .summary-box {
+    background: linear-gradient(135deg, #172554, #1e3a8a);
+    color: #ffffff;
+    border-left: 6px solid #38bdf8;
+    border-radius: 16px;
+    padding: 18px;
+    line-height: 1.8;
+    font-size: 16px;
+    box-shadow: 0 10px 25px rgba(0,0,0,.25);
+}
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes fadeDown { from { opacity: 0; transform: translateY(-35px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(45px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes floatIcon { 0% { transform: translateY(0px); } 50% { transform: translateY(-12px); } 100% { transform: translateY(0px); } }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom sticky-top px-4">
+    <div class="container">
+        <a class="navbar-brand fw-bold fs-4" href="#home">📄 DocuVision AI</a>
+
+        <div class="collapse navbar-collapse show">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="#pipeline">Pipeline</a></li>
+                <li class="nav-item"><a class="nav-link" href="#ocr">OCR</a></li>
+                <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loader-card">
+        <div class="spinner mb-4"></div>
+        <h4>Scanning Document...</h4>
+        <p class="text-info mb-0">Segmenting lines and extracting text</p>
+    </div>
+</div>
+
+<div class="container py-4">
+
+    <section id="home" class="hero">
+        <div class="floating-icon">📄</div>
+        <h1 class="title">DocuVision AI</h1>
+        <p class="typing">AI-Powered Intelligent Document Digitization System</p>
+        <div class="mt-3">
+            <span class="badge-ai">PyTorch • OpenCV • Flask • CRNN</span>
+        </div>
+    </section>
+
+    <section id="pipeline" class="my-5">
+        <div class="glass-card p-5">
+            <h2 class="section-title">OCR Pipeline</h2>
+
+            <div class="row">
+                <div class="col-md-2 pipeline-step"><div class="pipeline-icon">📤</div><h6>Upload</h6></div>
+                <div class="col-md-2 pipeline-step"><div class="pipeline-icon">🖼️</div><h6>Preprocess</h6></div>
+                <div class="col-md-2 pipeline-step"><div class="pipeline-icon">✂️</div><h6>Segment</h6></div>
+                <div class="col-md-2 pipeline-step"><div class="pipeline-icon">🧠</div><h6>CRNN</h6></div>
+                <div class="col-md-2 pipeline-step"><div class="pipeline-icon">🔤</div><h6>Decode</h6></div>
+                <div class="col-md-2 pipeline-step"><div class="pipeline-icon">📄</div><h6>Text</h6></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="ocr">
+        <div class="glass-card p-4">
+            <div class="upload-box mb-4">
+                <h3>Upload Your Document</h3>
+                <p class="text-light">Select an image and let the OCR model extract text.</p>
+
+                <form method="POST" enctype="multipart/form-data" onsubmit="showLoading()">
+                    <input class="form-control my-3" type="file" name="image" accept="image/*" required>
+                    <button class="btn btn-custom">Upload & Extract Text</button>
+                </form>
+            </div>
+
+            {% if image_path %}
+
+{% if preview_paths %}
+<div class="glass-card mt-4 p-4">
+
+    <h3 class="text-center mb-4">Image Processing Pipeline</h3>
+
+    <div class="row text-center">
+
+        <div class="col-md-4 mb-4">
+            <div class="feature-card">
+                <h4>🖼 Original</h4>
+                <img src="{{ preview_paths.original }}" class="img-fluid rounded shadow mt-3">
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="feature-card">
+                <h4>⚫ Grayscale</h4>
+                <img src="{{ preview_paths.grayscale }}" class="img-fluid rounded shadow mt-3">
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="feature-card">
+                <h4>⚪ Threshold</h4>
+                <img src="{{ preview_paths.threshold }}" class="img-fluid rounded shadow mt-3">
+            </div>
+        </div>
+
+    </div>
+
+    <hr class="my-4">
+
+    <h4 class="text-center mb-4">✂️ Line Segmentation Result</h4>
+
+    <div class="row">
+        {% for line in preview_paths.lines %}
+        <div class="col-md-3 col-6 mb-3">
+            <img src="{{ line }}" class="img-fluid rounded shadow-sm border">
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+{% endif %}
+
+<div class="row g-4 align-items-start mt-4">
+
+    <div class="col-md-6">
+        <h4>Uploaded Image</h4>
+        <div class="preview-wrapper">
+            <img src="{{ image_path }}" class="preview-img" alt="Uploaded Image">
+            <div class="scan-line"></div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+    <h4>AI OCR Result</h4>
+
+    <div class="result-box">
+
+        {% if processing_time %}
+    <div class="time-badge">
+        ⏱ Processed in {{ processing_time }} seconds
+    </div>
+{% endif %}
+
+{% if summary %}
+<div class="mt-3 mb-4">
+    <h5 class="mb-3">
+        ✨ AI Document Summary
+        <span class="badge bg-primary ms-2">Gemini AI</span>
+    </h5>
+
+    <div id="summaryText" class="summary-box">
+        {{ summary }}
+    </div>
+
+    <button class="btn btn-outline-info mt-3" onclick="copySummary()">
+        📋 Copy Summary
+    </button>
+</div>
+{% endif %}
+
+{% if prediction %}
+
+                            <div class="mb-3">
+                                <input type="text" class="form-control" id="searchInput"
+                                       placeholder="Search in extracted text..."
+                                       onkeyup="searchText()">
+                            </div>
+
+                            <div class="mb-3">
+                                <span class="stat-badge" id="wordCount">Words: 0</span>
+                                <span class="stat-badge" id="charCount">Characters: 0</span>
+                                <span class="stat-badge" id="lineCount">Lines: 0</span>
+                            </div>
+
+                            <div class="result-text" id="ocrText">{{ prediction }}</div>
+
+                            <div class="mt-3 d-flex flex-wrap gap-2">
+
+    <button class="btn btn-primary download-btn" onclick="downloadText()">
+        📄 Download Text
+    </button>
+
+    <a href="/download_pdf" class="btn btn-danger download-btn">
+        📑 Download PDF
+    </a>
+
+    <button class="btn btn-outline-info download-btn" onclick="copyText()">
+        📋 Copy Text
+    </button>
+
+    <a href="/download_history" class="btn btn-outline-warning download-btn">
+        📊 OCR History
+    </a>
+
+</div>
+                        {% else %}
+                            <p>OCR prediction will appear here.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </section>
+
+    <section id="about" class="my-5">
+        <div class="glass-card p-5">
+            <h2 class="section-title">About DocuVision AI</h2>
+
+            <p class="text-center" style="color:#dbeafe; font-size:17px; line-height:1.7;">
+                DocuVision AI is an intelligent document digitization system that uses
+                Computer Vision and Deep Learning to convert handwritten and scanned
+                documents into editable digital text.
+            </p>
+
+            <div class="row text-center mt-5">
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <h3>🧠</h3>
+                        <h5>AI Model</h5>
+                        <p>CRNN architecture for sequence-based OCR recognition.</p>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <h3>⚙️</h3>
+                        <h5>Technology Stack</h5>
+                        <p>Python, Flask, OpenCV, PyTorch, and CTC decoding.</p>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <h3>📄</h3>
+                        <h5>OCR Pipeline</h5>
+                        <p>Upload, segment, recognize, and generate editable text.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<script>
+    function showLoading() {
+        document.getElementById("loadingOverlay").style.display = "flex";
+    }
+
+    function downloadText() {
+        const text = document.getElementById("ocrText").innerText;
+        const blob = new Blob([text], { type: "text/plain" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "extracted_text.txt";
+        link.click();
+    }
+
+    function copyText() {
+        const text = document.getElementById("ocrText").innerText;
+        navigator.clipboard.writeText(text);
+        alert("Extracted text copied!");
+    }
+
+    function updateStats() {
+        const textElement = document.getElementById("ocrText");
+        if (!textElement) return;
+
+        const text = textElement.innerText.trim();
+        const words = text ? text.split(/\s+/).length : 0;
+        const chars = text.length;
+        const lines = text ? text.split(/\n+/).length : 0;
+
+        document.getElementById("wordCount").innerText = "Words: " + words;
+        document.getElementById("charCount").innerText = "Characters: " + chars;
+        document.getElementById("lineCount").innerText = "Lines: " + lines;
+    }
+
+    function searchText() {
+        const input = document.getElementById("searchInput").value.toLowerCase();
+        const textBox = document.getElementById("ocrText");
+        const originalText = textBox.innerText;
+
+        if (!input) {
+            textBox.innerHTML = originalText;
+            updateStats();
+            return;
+        }
+
+        const regex = new RegExp("(" + input + ")", "gi");
+        textBox.innerHTML = originalText.replace(regex, "<mark>$1</mark>");
+    }
+    function copySummary() {
+    const summary = document.getElementById("summaryText");
+    if (!summary) return;
+
+    navigator.clipboard.writeText(summary.innerText);
+    alert("Summary copied!");
+}
+
+    window.onload = updateStats;
+</script>
+
+</body>
+</html>
