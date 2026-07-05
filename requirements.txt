@@ -6,7 +6,7 @@ Werkzeug==3.0.3
 python-dotenv==1.0.1
 
 # Deep Learning
-torch==2.12.1
+torch
 
 # Data Processing
 numpy==1.26.4
